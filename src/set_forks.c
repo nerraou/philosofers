@@ -1,22 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_philo.c                                       :+:      :+:    :+:   */
+/*   set_forks.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nerraou <nerraou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/28 15:08:58 by nerraou           #+#    #+#             */
-/*   Updated: 2022/03/28 15:30:51 by nerraou          ###   ########.fr       */
+/*   Created: 2022/03/30 12:14:53 by nerraou           #+#    #+#             */
+/*   Updated: 2022/03/30 15:20:49 by nerraou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void init_philo(t_philo *philo)
+void set_forks(int *forks, int size)
 {
-    philo->number_of_philosophers = 0;
-    philo->time_to_die = 0;
-    philo->time_to_eat = 0;
-    philo->time_to_sleep = 0;
-    philo->number_of_times_each_philosopher_must_eat = -1;
+    int i;
+    int f;
+
+    i = 0;
+    f = 1;
+    while (i < size)
+    {
+        forks[i] = f;
+        i++;
+        f++;
+    }
 }

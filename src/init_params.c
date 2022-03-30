@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_philo.c                                        :+:      :+:    :+:   */
+/*   init_params.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nerraou <nerraou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/28 15:09:50 by nerraou           #+#    #+#             */
-/*   Updated: 2022/03/28 15:29:51 by nerraou          ###   ########.fr       */
+/*   Created: 2022/03/28 15:08:58 by nerraou           #+#    #+#             */
+/*   Updated: 2022/03/30 17:09:44 by nerraou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void set_philo(t_philo *philo, int ac,char *av[])
+void init_params(t_params *param)
 {
-    philo->number_of_philosophers = ft_atoi(av[1]);
-    philo->time_to_die = ft_atoi(av[2]);
-    philo->time_to_eat = ft_atoi(av[3]);
-    philo->time_to_sleep = ft_atoi(av[4]);
-    if (ac == 6)
-        philo->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
+
+    param->number_of_philosophers = 0;
+    param->forks = (int *)malloc(sizeof(int) * 1);
+    if (param->forks)
+        return;
+    memset(param->forks, 0, 1);
+    param->time_to_die = 0;
+    param->philo_id = 0;
+    param->time_to_eat = 0;
+    param->time_to_sleep = 0;
+    param->number_of_times_each_philosopher_must_eat = -1;
 }

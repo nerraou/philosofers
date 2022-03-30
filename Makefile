@@ -2,13 +2,12 @@ NAME = philo
 CFLAGS = -Wall -Wextra -Werror
 HEADERS = ./includes/philo.h
 
-SRC =  	src/init_philo.c\
-		src/set_philo.c\
+SRC =  	src/init_params.c\
+		src/set_params.c\
 		src/ft_atoi.c\
+		src/set_forks.c\
 		src/philo.c
 
-	
-		
 
 OBJ =  $(SRC:.c=.o)
 
