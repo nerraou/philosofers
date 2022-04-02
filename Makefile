@@ -6,6 +6,7 @@ SRC =  	src/init_params.c\
 		src/set_params.c\
 		src/ft_atoi.c\
 		src/set_forks.c\
+		src/set_philo.c\
 		src/philo.c
 
 

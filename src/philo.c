@@ -1,48 +1,132 @@
 
 #include "philo.h"
+///create  two functions 1 generate mutex and destroy mutex
 
-pthread_mutex_t mutex;
+void init_mutex(t_fork *forks, int size)
+{
+    int i;
+
+    i = 0;
+    while (i < size)
+    {
+        pthread_mutex_init(&forks[i].mutex, NULL);
+        i++;
+    }
+}
+
+// destroy mutex
+
+void destroy_mutex(t_fork *forks, int size)
+{
+    int i;
+
+    i = 0;
+    while (i < size)
+    {
+        pthread_mutex_destroy(&forks[i].mutex);
+        i++;
+    }
+}
+void *test(void *philosopher)
+{
+    t_philo *philo;
+    int i;
+
+    i = 0;
+    philo = (t_philo *)philosopher;
+
+    printf("HELLO philo number is waiting %d\n your left fork number %d\n your right fork number %d\n ", philo->philo_id, philo->left_fork, philo->right_fork);
+
+    return NULL;
+}
+// printf("HELLO philo number is EATING %d\n"
+//        "your left fork number %d\n"
+//        "your right fork number %d\n ",
+//        philo->philo_id, philo->left_fork, philo->right_fork);
+
 void *philo_thread(void *philosopher)
 {
-    t_params *param;
+    t_philo *philo;
+    while (1)
+    {
+        philo = (t_philo *)philosopher;
+        pthread_mutex_lock(&philo->forks[philo->left_fork].mutex);
+        pthread_mutex_lock(&philo->forks[philo->right_fork].mutex);
+        if (!philo->forks[philo->left_fork].is_taken && !philo->forks[philo->right_fork].is_taken)
+        {
+            philo->forks[philo->left_fork].is_taken = 1;
+            philo->forks[philo->right_fork].is_taken = 1;
+            philo->state = EATING;
+        }
+        else
+            philo->state = SLEEPING;
+        pthread_mutex_unlock(&philo->forks[philo->left_fork].mutex);
+        pthread_mutex_unlock(&philo->forks[philo->right_fork].mutex);
+        if (philo->state == EATING)
+        {
+            printf("philo number is EATING %d\n", philo->philo_id);
+            sleep(philo->params->time_to_eat);
+            pthread_mutex_lock(&philo->forks[philo->left_fork].mutex);
+            pthread_mutex_lock(&philo->forks[philo->right_fork].mutex);
+            philo->forks[philo->left_fork].is_taken = 0;
+            philo->forks[philo->right_fork].is_taken = 0;
+            philo->state = THINKING;
+            pthread_mutex_unlock(&philo->forks[philo->left_fork].mutex);
+            pthread_mutex_unlock(&philo->forks[philo->right_fork].mutex);
+        }
+        if (philo->state == THINKING)
+        {
+            printf("philo number is THINKING %d\n", philo->philo_id);
+        }
+        if (philo->state == SLEEPING)
+        {
+            printf("philo number is SLEEPING %d\n", philo->philo_id);
+            sleep(philo->params->time_to_sleep);
+        }
+    }
 
-    param = (t_params *)philosopher;
-    pthread_mutex_lock(&mutex);
-    printf("HELLO philo number %d\n", param->philo_id);
-    param->philo_id++;
-    pthread_mutex_unlock(&mutex);
     return NULL;
 }
 
 int main(int ac, char *av[])
 {
     t_params param;
-    pthread_t *thread_id;
+    t_philo *philosophers;
+    t_fork *forks;
+    int size;
     int i;
 
     init_params(&param);
     if (ac == 5 || ac == 6)
     {
         set_params(&param, ac, av);
-        pthread_mutex_init(&mutex, NULL);
-        thread_id = (pthread_t *)malloc(sizeof(pthread_t) * param.number_of_philosophers);
-        if (!thread_id)
-            return 1;
+        size = param.number_of_philosophers;
+        philosophers = (t_philo *)malloc(sizeof(t_philo) * size);
+        if (!philosophers)
+            return 2;
+        forks = (t_fork *)malloc(sizeof(t_fork) * size);
+        if (!forks)
+            return 3;
+        set_forks(forks, size);
+        set_philo(philosophers, forks, &param);
+        init_mutex(forks, size);
         i = 0;
-        while (i < param.number_of_philosophers)
+        while (i < size)
         {
-            if (pthread_create(thread_id + i, NULL, philo_thread, (void *)&param) != 0)
+            if (pthread_create(&philosophers[i].thread, NULL, philo_thread, (void *)(philosophers + i)) != 0)
                 return 2;
+
+            // printf("state   %d\n", philosophers[i].state);
             i++;
         }
         i = 0;
-        while (i < param.number_of_philosophers)
+        while (i < size)
         {
-            if (pthread_join(thread_id[i], NULL) != 0)
+            if (pthread_join(philosophers[i].thread, NULL) != 0)
                 return 2;
             i++;
         }
-        pthread_mutex_destroy(&mutex);
+        destroy_mutex(forks, size);
     }
     return 0;
 }
