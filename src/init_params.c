@@ -6,7 +6,7 @@
 /*   By: nerraou <nerraou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:08:58 by nerraou           #+#    #+#             */
-/*   Updated: 2022/03/31 15:59:07 by nerraou          ###   ########.fr       */
+/*   Updated: 2022/04/03 17:57:39 by nerraou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 
 void init_params(t_params *param)
 {
-
     param->number_of_philosophers = 0;
     param->time_to_die = 0;
     param->time_to_eat = 0;
     param->time_to_sleep = 0;
-    param->number_of_times_each_philosopher_must_eat = -1;
+    param->nt_must_eat = -1;
 }

@@ -6,6 +6,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 #define EATING 1
 #define SLEEPING 2
@@ -25,7 +26,7 @@ typedef struct s_params
     int time_to_die;
     int time_to_eat;
     int time_to_sleep;
-    int number_of_times_each_philosopher_must_eat;
+    int nt_must_eat;
 
 } t_params;
 
@@ -37,6 +38,8 @@ typedef struct s_philo
     int left_fork;
     int right_fork;
     int philo_id;
+    int eat_count;
+    int last_eat_time;
     int state;
 } t_philo;
 

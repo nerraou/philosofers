@@ -6,7 +6,7 @@
 /*   By: nerraou <nerraou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 11:46:28 by nerraou           #+#    #+#             */
-/*   Updated: 2022/04/02 16:46:45 by nerraou          ###   ########.fr       */
+/*   Updated: 2022/04/03 15:14:25 by nerraou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void set_philo(t_philo *philo, t_fork *forks, t_params *params)
         else
             philo[i].right_fork = forks[j].fork_id;
         philo[i].philo_id = j;
+        philo[i].eat_count = 0;
         j++;
         i++;
     }
