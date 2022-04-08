@@ -7,6 +7,8 @@ SRC =  	src/init_params.c\
 		src/ft_atoi.c\
 		src/set_forks.c\
 		src/set_philo.c\
+		src/get_current_time.c\
+		src/global_state.c\
 		src/philo.c
 
 

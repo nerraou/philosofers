@@ -28,6 +28,14 @@ void destroy_mutex(t_fork *forks, int size)
     }
 }
 
+void print_state(pthread_mutex_t *mutex, int state, const char *message)
+{
+    pthread_mutex_lock(mutex);
+    if (state != DEAD)
+        printf("%s\n", message);
+    pthread_mutex_unlock(mutex);
+}
+
 void *test(void *philosopher)
 {
     t_philo *philo;
@@ -52,8 +60,7 @@ void *philo_thread(void *philosopher)
     philo = (t_philo *)philosopher;
     int eat_count;
     eat_count = 0;
-
-    while (philo->state != DEAD && eat_count != philo->params->nt_must_eat)
+    while (philo->global_state->philo_is_dead != DEAD)
     {
         pthread_mutex_lock(&philo->forks[philo->left_fork].mutex);
         pthread_mutex_lock(&philo->forks[philo->right_fork].mutex);
@@ -62,7 +69,7 @@ void *philo_thread(void *philosopher)
             philo->forks[philo->left_fork].is_taken = 1;
             philo->forks[philo->right_fork].is_taken = 1;
             philo->state = EATING;
-            // philo->eat_time = get_current_time();
+            philo->eat_time = get_current_time();
         }
         else
             philo->state = SLEEPING;
@@ -70,9 +77,9 @@ void *philo_thread(void *philosopher)
         pthread_mutex_unlock(&philo->forks[philo->right_fork].mutex);
         if (philo->state == EATING)
         {
-            printf("philo number is EATING %d\n", philo->philo_id);
+            print_state(&philo->global_state->print_mutex, philo->global_state->philo_is_dead, "philo number is EATING");
             philo->eat_count++;
-            sleep(philo->params->time_to_eat);
+            usleep(philo->params->time_to_eat * 1000);
             pthread_mutex_lock(&philo->forks[philo->left_fork].mutex);
             pthread_mutex_lock(&philo->forks[philo->right_fork].mutex);
             philo->forks[philo->left_fork].is_taken = 0;
@@ -81,15 +88,22 @@ void *philo_thread(void *philosopher)
             pthread_mutex_unlock(&philo->forks[philo->left_fork].mutex);
             pthread_mutex_unlock(&philo->forks[philo->right_fork].mutex);
         }
+        if (get_current_time() - philo->eat_time >= philo->params->time_to_die)
+        {
+            print_state(&philo->global_state->print_mutex, philo->global_state->philo_is_dead, "philo is dead");
+            philo->state = DEAD;
+            if (philo->global_state->philo_is_dead != DEAD)
+                philo->global_state->philo_is_dead = DEAD;
+        }
         if (philo->state == SLEEPING)
         {
-            printf("philo number is SLEEPING %d\n", philo->philo_id);
-            sleep(philo->params->time_to_sleep);
+            print_state(&philo->global_state->print_mutex, philo->global_state->philo_is_dead, "philo number is SLEEPING");
+            usleep(philo->params->time_to_sleep * 1000);
             philo->state = THINKING;
         }
         if (philo->state == THINKING)
         {
-            printf("philo number is THINKING %d\n", philo->philo_id);
+            print_state(&philo->global_state->print_mutex, philo->global_state->philo_is_dead, "philo number is THINKING");
         }
     }
     return NULL;
@@ -98,6 +112,7 @@ void *philo_thread(void *philosopher)
 int main(int ac, char *av[])
 {
     t_params param;
+    t_state state;
     t_philo *philosophers;
     t_fork *forks;
     int size;
@@ -115,9 +130,10 @@ int main(int ac, char *av[])
         if (!forks)
             return 3;
         set_forks(forks, size);
-        set_philo(philosophers, forks, &param);
+        global_state(&state);
+        set_philo(philosophers, forks, &param, &state);
         init_mutex(forks, size);
-
+        pthread_mutex_init(&state.print_mutex, NULL);
         i = 0;
         while (i < size)
         {
@@ -133,8 +149,9 @@ int main(int ac, char *av[])
                 return 2;
             i++;
         }
-
         destroy_mutex(forks, size);
+        pthread_mutex_destroy(&state.print_mutex);
+        printf("glb state %d", philosophers->global_state->philo_is_dead);
     }
     return 0;
 }
