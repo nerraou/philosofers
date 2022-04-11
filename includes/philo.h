@@ -58,6 +58,11 @@ void set_philo(t_philo *philo, t_fork *forks, t_params *params, t_state *state);
 void set_forks(t_fork *forks, int size);
 void global_state(t_state *global_state);
 
+void init_mutex(t_fork *forks, int size);
+void destroy_mutex(t_fork *forks, int size);
+void print_state(pthread_mutex_t *mutex, int state, const char *message);
+void *philo_thread(void *philosopher);
+
 long get_current_time();
 int ft_atoi(const char *str);
 

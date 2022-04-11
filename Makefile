@@ -9,6 +9,10 @@ SRC =  	src/init_params.c\
 		src/set_philo.c\
 		src/get_current_time.c\
 		src/global_state.c\
+		src/init_mutex.c\
+		src/destroy_mutex.c\
+		src/print_state.c\
+		src/philo_thread.c\
 		src/philo.c
 
 
