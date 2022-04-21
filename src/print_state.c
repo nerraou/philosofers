@@ -14,8 +14,8 @@
 
 void print_state(pthread_mutex_t *mutex, int state, const char *message)
 {
+    (void)state;
     pthread_mutex_lock(mutex);
-    if (state != DEAD)
         printf("%s\n", message);
     pthread_mutex_unlock(mutex);
 }

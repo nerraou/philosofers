@@ -8,62 +8,43 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-#define EATING 1
-#define SLEEPING 2
-#define THINKING 3
-#define DEAD 4
+#define FT_ERROR 1
+#define FT_SUCCESS 0
 
-typedef struct s_fork
-{
-    pthread_mutex_t mutex;
-    int fork_id;
-    int is_taken;
-} t_fork;
-
-typedef struct s_params
-{
-    int number_of_philosophers;
-    int time_to_die;
-    int time_to_eat;
-    int time_to_sleep;
-    int nt_must_eat;
-
-} t_params;
-
-typedef struct s_state
-{
-    int philo_is_dead;
-    int satiation;
-    pthread_mutex_t print_mutex;
-} t_state;
 
 typedef struct s_philo
 {
-    t_params *params;
-    t_fork *forks;
-    t_state *global_state;
-    pthread_t thread;
-    int left_fork;
-    int right_fork;
-    int philo_id;
-    int eat_count;
-    int last_eat_time;
-    int state;
-    long eat_time;
+    struct s_params *params;
+    pthread_t   thread;
+    pthread_mutex_t *left_fork;
+    pthread_mutex_t *right_fork;
+    pthread_mutex_t	check_mutex;
+    struct timeval  last_time_to_eat;
 } t_philo;
 
-void set_params(t_params *param, int ac, char *av[]);
-void init_params(t_params *param);
-void set_philo(t_philo *philo, t_fork *forks, t_params *params, t_state *state);
-void set_forks(t_fork *forks, int size);
-void global_state(t_state *global_state);
 
-void init_mutex(t_fork *forks, int size);
-void destroy_mutex(t_fork *forks, int size);
+typedef struct s_params
+{
+    int             num_of_philosophers;
+    int             time_to_die;
+    int             time_to_eat;
+    int             time_to_sleep;
+    int             nt_must_eat;
+    int             finish;
+    pthread_mutex_t finish_mutex;
+    t_philo         *philos;
+    pthread_mutex_t *forks;
+    struct timeval  create_at;
+}              t_params;
+
+int init(t_params *param, int ac, char *av[]);
+void	*ft_calloc(size_t nmemb, size_t size);
+
+
 void print_state(pthread_mutex_t *mutex, int state, const char *message);
 void *philo_thread(void *philosopher);
 
 long get_current_time();
 int ft_atoi(const char *str);
-
+int ft_puterror(const char *str);
 #endif
