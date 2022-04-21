@@ -42,7 +42,7 @@ static  int set_philo(t_params *param)
     int i;
 
     pthread_mutex_init(&param->finish_mutex, NULL);
-    param->philos = ft_calloc(param->num_of_philosophers, sizeof(t_philo *);
+    param->philos = ft_calloc(param->num_of_philosophers, sizeof(t_philo *));
     if (!param->philos)
         return (ft_puterror("ERROR: malloc failed\n"));
     param->forks = ft_calloc(param->num_of_philosophers, sizeof(pthread_mutex_t *));
