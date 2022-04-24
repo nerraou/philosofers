@@ -12,9 +12,11 @@
 
 #include "philo.h"
 
-long get_current_time()
+long long time_to_ms(struct timeval now)
 {
-    struct timeval current_time;
-    gettimeofday(&current_time, NULL);
-    return (current_time.tv_sec * 1000);
+   long long    ms;
+
+   ms = now.tv_sec * 1000;
+   ms += now.tv_usec / 1000;
+   return (ms);
 }

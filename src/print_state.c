@@ -12,10 +12,15 @@
 
 #include "philo.h"
 
-void print_state(pthread_mutex_t *mutex, int state, const char *message)
+void print_state(t_philo *philo, const char *message)
 {
-    (void)state;
-    pthread_mutex_lock(mutex);
-        printf("%s\n", message);
-    pthread_mutex_unlock(mutex);
+   long long    ms;
+   struct timeval   now;
+
+   pthread_mutex_lock(&philo->params->finish_mutex);
+	gettimeofday(&now, NULL);
+ms = time_to_ms(now) - time_to_ms(philo->params->create_at);
+if (!philo->params->finish)
+      printf("%lld\t%d\t %s\n", ms, philo->id + 1, message);
+	pthread_mutex_unlock(&philo->params->finish_mutex);
 }

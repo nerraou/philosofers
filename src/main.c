@@ -10,8 +10,9 @@ int main(int ac, char *av[])
     if(init(&param, ac, av))
     {
         printf("ERROR\n");
-        return 1;
+        return (FT_ERROR);
     }
-    printf("OK\n");
-    return (0);
+   create_philos(&param);
+   join_and_free_philos(&param);
+    return (FT_SUCCESS);
 }

@@ -14,6 +14,9 @@
 
 typedef struct s_philo
 {
+    int id;
+    int num_of_eat;
+	int				num_of_must_eat;
     struct s_params *params;
     pthread_t   thread;
     pthread_mutex_t *left_fork;
@@ -30,6 +33,7 @@ typedef struct s_params
     int             time_to_eat;
     int             time_to_sleep;
     int             nt_must_eat;
+	int				num_of_eat_finish_philo;
     int             finish;
     pthread_mutex_t finish_mutex;
     t_philo         *philos;
@@ -39,12 +43,16 @@ typedef struct s_params
 
 int init(t_params *param, int ac, char *av[]);
 void	*ft_calloc(size_t nmemb, size_t size);
+void *philo(void *argv);
+void	*monitor_each_must_eat(void *argv);
 
+void	join_and_free_philos(t_params *param);
+void create_philos(t_params *params);
+void print_state(t_philo *philo, const char *message);
+void	*monitor(void *argv);
 
-void print_state(pthread_mutex_t *mutex, int state, const char *message);
-void *philo_thread(void *philosopher);
+long long time_to_ms(struct timeval now);
 
-long get_current_time();
 int ft_atoi(const char *str);
 int ft_puterror(const char *str);
 #endif
