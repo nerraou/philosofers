@@ -11,7 +11,7 @@ static void pickup_fork(t_philo *philo)
 static void	sleeping(t_philo *philo)
 {
 	print_state(philo, "is sleeping");
-	usleep(philo->params->time_to_sleep * 1000);
+	usleep(philo->params->time_to_sleep * 6000);
 }
 
 static void	thinking(t_philo *philo)
@@ -33,7 +33,7 @@ static void eating(t_philo *philo)
 	if (philo->num_of_eat == philo->params->nt_must_eat)
 		philo->params->num_of_eat_finish_philo += 1;
 	pthread_mutex_unlock(&philo->params->finish_mutex);
-	usleep(philo->params->time_to_eat * 1000);
+	usleep(philo->params->time_to_eat);
 	pthread_mutex_unlock(philo->right_fork);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(&philo->check_mutex);
@@ -44,8 +44,8 @@ void *philo(void *argv)
     t_philo *philo;
 
     philo = argv;
-    if (philo->id % 2 == 0)
-		usleep(philo->params->time_to_eat * 1000);
+    // if (philo->id % 2 == 0)
+	// 	usleep(philo->params->time_to_eat);
 	while (!philo->params->finish)
 	{
 		pickup_fork(philo);
