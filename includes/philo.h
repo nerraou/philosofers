@@ -14,16 +14,21 @@
 
 typedef struct s_philo
 {
-    int id;
-    int num_of_eat;
-	int				num_of_must_eat;
+    int     id;
+    int     num_of_eat;
+	int     num_of_must_eat;
+    int     left_fork;
+    int     right_fork;
     struct s_params *params;
-    pthread_t   thread;
-    pthread_mutex_t *left_fork;
-    pthread_mutex_t *right_fork;
+    pthread_t       thread;  
     pthread_mutex_t	check_mutex;
     struct timeval  last_time_to_eat;
 } t_philo;
+
+typedef struct s_fork
+{
+    int is_taken;
+}   t_fork;
 
 
 typedef struct s_params
@@ -36,8 +41,9 @@ typedef struct s_params
 	int				num_of_eat_finish_philo;
     int             finish;
     pthread_mutex_t finish_mutex;
+    pthread_mutex_t pickup_fork;
     t_philo         *philos;
-    pthread_mutex_t *forks;
+    t_fork          *forks;
     struct timeval  create_at;
 }              t_params;
 

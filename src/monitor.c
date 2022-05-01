@@ -31,7 +31,7 @@ void	*monitor(void *argv)
 		gettimeofday(&now, NULL);
 		if (ms >= philo->params->time_to_die && philo->params->finish == 0)
 		{
-			printf("%lld\t%d\t %s\n", time_to_ms(now) - time_to_ms(philo->params->create_at), philo->id + 1, "died");
+			print_state(philo, "died");
 			philo->params->finish = 1;
 		}
 		pthread_mutex_unlock(&philo->params->finish_mutex);

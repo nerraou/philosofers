@@ -11,8 +11,5 @@ void	join_and_free_philos(t_params *param)
 		pthread_mutex_destroy(&param->philos[i++].check_mutex);
 	}
 	free(param->philos);
-	i = 0;
-	while (i < param->num_of_philosophers)
-		pthread_mutex_destroy(&param->forks[i++]);
 	free(param->forks);
 }

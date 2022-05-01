@@ -19,7 +19,7 @@ void print_state(t_philo *philo, const char *message)
 
       pthread_mutex_lock(&philo->params->finish_mutex);
       gettimeofday(&now, NULL);
-      ms = time_to_ms(now) - time_to_ms(philo->params->create_at);
+      ms = time_to_ms(now) ;
       if (!philo->params->finish)
             printf("%lld\t%d\t %s\n", ms, philo->id + 1, message);
       pthread_mutex_unlock(&philo->params->finish_mutex);
