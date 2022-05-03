@@ -29,19 +29,18 @@ static void thinking(t_philo *philo)
 
 static void eating(t_philo *philo)
 {
-	//long long ms;
+	long long ms;
 
 	pthread_mutex_lock(&philo->check_mutex);
 	gettimeofday(&philo->last_time_to_eat, NULL);
-	//ms = time_to_ms(philo->last_time_to_eat);
-	pthread_mutex_lock(&philo->params->finish_mutex);
+	ms = time_to_ms(philo->last_time_to_eat);
+   pthread_mutex_lock(&philo->params->finish_mutex);
 	if (!philo->params->finish)
-		print_state(philo, "is eating");
-		//printf("%lld\t%d\t %s\n", ms, philo->id + 1, "is eating");
+	printf("%lld\t%d\t %s\n", ms, philo->id + 1, "is eating");
 	philo->num_of_eat += 1;
 	if (philo->num_of_eat == philo->params->nt_must_eat)
 		philo->params->num_of_eat_finish_philo += 1;
-	pthread_mutex_unlock(&philo->params->finish_mutex);
+    pthread_mutex_unlock(&philo->params->finish_mutex);
 	usleep(philo->params->time_to_eat);
 	pthread_mutex_lock(&philo->params->pickup_fork);
 	philo->params->forks[philo->left_fork].is_taken = 0;
