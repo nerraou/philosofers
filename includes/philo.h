@@ -53,7 +53,7 @@ void *monitor_each_must_eat(void *argv);
 
 void join_and_free_philos(t_params *param);
 void create_philos(t_params *params);
-void print_state(t_philo *philo, const char *message);
+void print_state(t_philo *philo, const char *message, int lock);
 void *monitor(void *argv);
 
 long long time_to_ms(struct timeval now);

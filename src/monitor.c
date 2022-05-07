@@ -1,8 +1,8 @@
 #include "philo.h"
 
-void	*monitor_each_must_eat(void *argv)
+void *monitor_each_must_eat(void *argv)
 {
-	t_params	*param;
+	t_params *param;
 
 	param = argv;
 	while (!param->finish)
@@ -15,27 +15,34 @@ void	*monitor_each_must_eat(void *argv)
 	return (NULL);
 }
 
-void	*monitor(void *argv)
+void *monitor(void *argv)
 {
-	t_philo			*philo;
-	struct timeval	now;
-	long long		ms;
+	t_philo *philo;
+	struct timeval now;
+	long long ms;
 
 	philo = argv;
-	while (!philo->params->finish)
+	while (1)
 	{
-		pthread_mutex_lock(&philo->check_mutex);
 		pthread_mutex_lock(&philo->params->finish_mutex);
-		gettimeofday(&now, NULL);
-		ms = time_to_ms(now) - time_to_ms(philo->last_time_to_eat);
-		gettimeofday(&now, NULL);
-		if (ms >= philo->params->time_to_die && philo->params->finish == 0)
+		if (!philo->params->finish)
 		{
-			print_state(philo, "died");
-			philo->params->finish = 1;
+			pthread_mutex_lock(&philo->check_mutex);
+			gettimeofday(&now, NULL);
+			ms = time_to_ms(now) - time_to_ms(philo->last_time_to_eat);
+			if (ms >= philo->params->time_to_die && philo->params->finish == 0)
+			{
+				print_state(philo, "died", 0);
+				philo->params->finish = 1;
+			}
+			pthread_mutex_unlock(&philo->check_mutex);
+		}
+		else
+		{
+			pthread_mutex_unlock(&philo->params->finish_mutex);
+			break;
 		}
 		pthread_mutex_unlock(&philo->params->finish_mutex);
-		pthread_mutex_unlock(&philo->check_mutex);
 	}
 	return (NULL);
 }
