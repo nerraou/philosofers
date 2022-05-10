@@ -11,7 +11,6 @@ void create_philos(t_params *params)
     {
         params->philos[i].last_time_to_eat = params->create_at;
         pthread_create(&params->philos[i].thread, NULL, philo, &params->philos[i]);
-
         pthread_create(&thread, NULL, monitor, &params->philos[i]);
         pthread_detach(thread);
         ++i;

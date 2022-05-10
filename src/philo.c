@@ -27,6 +27,7 @@ static void pickup_fork(t_philo *philo)
 
 static void sleeping(t_philo *philo)
 {
+
 	print_state(philo, "is sleeping", 1);
 	usleep(philo->params->time_to_sleep * 1000);
 }
@@ -40,10 +41,8 @@ static void eating(t_philo *philo)
 {
 	long long ms;
 
-	pthread_mutex_lock(&philo->params->pickup_fork);
-	if (philo->has_forks == 2)
+	if (philo->has_forks == 2 || (philo->has_forks == 1 && philo->params->num_of_philosophers == 1))
 	{
-		pthread_mutex_unlock(&philo->params->pickup_fork);
 		pthread_mutex_lock(&philo->check_mutex);
 		gettimeofday(&philo->last_time_to_eat, NULL);
 		ms = time_to_ms(philo->last_time_to_eat);
@@ -54,15 +53,17 @@ static void eating(t_philo *philo)
 			philo->params->num_of_eat_finish_philo += 1;
 		pthread_mutex_unlock(&philo->params->finish_mutex);
 		pthread_mutex_unlock(&philo->check_mutex);
+
 		usleep(philo->params->time_to_eat * 1000);
+
 		pthread_mutex_lock(&philo->params->pickup_fork);
-		philo->params->forks[philo->left_fork].is_taken = 0;
+
 		philo->params->forks[philo->right_fork].is_taken = 0;
+		if (philo->params->num_of_philosophers > 1)
+			philo->params->forks[philo->left_fork].is_taken = 0;
 		philo->has_forks = 0;
 		pthread_mutex_unlock(&philo->params->pickup_fork);
 	}
-	else
-		pthread_mutex_unlock(&philo->params->pickup_fork);
 }
 
 void *philo(void *argv)
@@ -70,13 +71,21 @@ void *philo(void *argv)
 	t_philo *philo;
 
 	philo = argv;
-	while (!philo->params->finish)
-	{
 
+	while (1)
+	{
+		pthread_mutex_lock(&philo->params->finish_mutex);
+		if (philo->params->finish)
+		{
+			pthread_mutex_unlock(&philo->params->finish_mutex);
+			break;
+		}
+		pthread_mutex_unlock(&philo->params->finish_mutex);
 		pickup_fork(philo);
 		eating(philo);
 		sleeping(philo);
 		thinking(philo);
 	}
+
 	return (NULL);
 }

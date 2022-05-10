@@ -6,7 +6,7 @@
 /*   By: nerraou <nerraou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:09:50 by nerraou           #+#    #+#             */
-/*   Updated: 2022/05/06 19:13:02 by nerraou          ###   ########.fr       */
+/*   Updated: 2022/05/09 17:08:06 by nerraou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ static int set_philo(t_params *param)
 {
   int i;
 
-  pthread_mutex_init(&param->finish_mutex, NULL);
   param->philos = ft_calloc(param->num_of_philosophers, sizeof(t_philo));
   if (!param->philos)
     return (ft_puterror("ERROR: malloc failed\n"));
@@ -51,8 +50,9 @@ static int set_philo(t_params *param)
     free(param->philos);
     return (ft_puterror("ERROR: malloc failed\n"));
   }
-  i = 0;
+  pthread_mutex_init(&param->finish_mutex, NULL);
   pthread_mutex_init(&param->pickup_fork, NULL);
+  i = 0;
   while (i < param->num_of_philosophers)
   {
     param->philos[i].id = i;
@@ -67,6 +67,7 @@ static int set_philo(t_params *param)
   }
   return (FT_SUCCESS);
 }
+
 int init(t_params *param, int ac, char *av[])
 {
   parsing_arg(param, ac, av);

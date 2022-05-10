@@ -6,7 +6,7 @@
 /*   By: nerraou <nerraou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 13:20:11 by nerraou           #+#    #+#             */
-/*   Updated: 2022/05/07 17:25:15 by nerraou          ###   ########.fr       */
+/*   Updated: 2022/05/10 12:25:42 by nerraou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,15 @@ void print_state(t_philo *philo, const char *message, int lock)
       struct timeval now;
 
       if (lock == 1)
+      {
             pthread_mutex_lock(&philo->params->finish_mutex);
+      }
       gettimeofday(&now, NULL);
       ms = time_to_ms(now);
       if (!philo->params->finish)
             printf("%lld\t%d\t %s\n", ms, philo->id + 1, message);
       if (lock == 1)
+      {
             pthread_mutex_unlock(&philo->params->finish_mutex);
+      }
 }
