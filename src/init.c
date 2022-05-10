@@ -6,7 +6,7 @@
 /*   By: nerraou <nerraou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:09:50 by nerraou           #+#    #+#             */
-/*   Updated: 2022/05/09 17:08:06 by nerraou          ###   ########.fr       */
+/*   Updated: 2022/05/10 18:18:27 by nerraou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ static int set_philo(t_params *param)
     return (ft_puterror("ERROR: malloc failed\n"));
   }
   pthread_mutex_init(&param->finish_mutex, NULL);
-  pthread_mutex_init(&param->pickup_fork, NULL);
   i = 0;
   while (i < param->num_of_philosophers)
   {
     param->philos[i].id = i;
     pthread_mutex_init(&param->philos[i].check_mutex, NULL);
+    pthread_mutex_init(&param->forks[i].fork_mutex, NULL);
     if (i == 0)
       param->philos[i].left_fork = param->num_of_philosophers - 1;
     else
