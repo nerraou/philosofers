@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "philo.h": "c",
-        "string.h": "c"
-    }
+        "string.h": "c",
+        "unistd.h": "c",
+        "time.h": "c"
+    },
+    "editor.insertSpaces": false,
+    "editor.tabSize": 4,
+	"editor.detectIndentation": false
 }

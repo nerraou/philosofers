@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   join_and_free_philos.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nerraou <nerraou@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/11 17:43:13 by nerraou           #+#    #+#             */
+/*   Updated: 2022/05/11 17:43:37 by nerraou          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-void join_and_free_philos(t_params *param)
+void	join_and_free_philos(t_params *param)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < param->num_of_philosophers)

@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nerraou <nerraou@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/11 18:52:08 by nerraou           #+#    #+#             */
+/*   Updated: 2022/05/11 18:57:36 by nerraou          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-static int pickup_fork(t_philo *philo)
+static int	pickup_fork(t_philo *philo)
 {
-	t_fork *left;
-	t_fork *right;
+	t_fork	*left;
+	t_fork	*right;
 
 	right = &philo->params->forks[philo->right_fork];
 	left = &philo->params->forks[philo->left_fork];
@@ -24,23 +36,22 @@ static int pickup_fork(t_philo *philo)
 	}
 	pthread_mutex_unlock(&left->fork_mutex);
 	if (philo->has_forks == 2)
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }
 
-static void sleeping(t_philo *philo)
+static void	sleeping(t_philo *philo)
 {
-
 	print_state(philo, "is sleeping", 1);
 	usleep(philo->params->time_to_sleep * 1000);
 }
 
-static void thinking(t_philo *philo)
+static void	thinking(t_philo *philo)
 {
 	print_state(philo, "is thinking", 1);
 }
 
-static void eating(t_philo *philo)
+static void	eating(t_philo *philo)
 {
 	if (philo->has_forks == 2)
 	{
@@ -54,42 +65,39 @@ static void eating(t_philo *philo)
 		philo->has_forks = 0;
 		pthread_mutex_unlock(&philo->params->finish_mutex);
 		pthread_mutex_unlock(&philo->check_mutex);
-
 		usleep(philo->params->time_to_eat * 1000);
-
 		pthread_mutex_lock(&philo->params->forks[philo->right_fork].fork_mutex);
 		philo->params->forks[philo->right_fork].is_taken = 0;
-		pthread_mutex_unlock(&philo->params->forks[philo->right_fork].fork_mutex);
-
-		pthread_mutex_lock(&philo->params->forks[philo->left_fork].fork_mutex);
+		pthread_mutex_unlock(&philo->params->forks
+		[philo->right_fork].fork_mutex);
+		pthread_mutex_lock(&philo->params->forks
+		[philo->left_fork].fork_mutex);
 		philo->params->forks[philo->left_fork].is_taken = 0;
-		pthread_mutex_unlock(&philo->params->forks[philo->left_fork].fork_mutex);
+		pthread_mutex_unlock(&philo->params->forks
+		[philo->left_fork].fork_mutex);
 	}
 }
 
-void *philo(void *argv)
+void	*philo(void *argv)
 {
-	t_philo *philo;
-	int check;
-	philo = argv;
+	t_philo	*philo;
 
+	philo = argv;
 	while (1)
 	{
 		pthread_mutex_lock(&philo->params->finish_mutex);
 		if (philo->params->finish)
 		{
 			pthread_mutex_unlock(&philo->params->finish_mutex);
-			break;
+			break ;
 		}
 		pthread_mutex_unlock(&philo->params->finish_mutex);
-		check = pickup_fork(philo);
-		if (check == 1)
+		if (pickup_fork(philo))
 		{
 			eating(philo);
 			sleeping(philo);
 			thinking(philo);
 		}
 	}
-
 	return (NULL);
 }
