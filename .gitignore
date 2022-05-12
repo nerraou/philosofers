@@ -1,4 +1,3 @@
 *.o
 .out
-philo
-
+philo/philo
